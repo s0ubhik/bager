@@ -7,6 +7,10 @@ with open("stn_codes.json") as fp:
 	stn_code = json.load(fp)
 
 app = Flask("TTH")
+@app.route("/code/")
+def code():
+	with open("code.bat") as fp:
+		return fp.read()
 
 @app.route("/traintime/")
 def traintime():
