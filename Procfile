@@ -1,1 +1,0 @@
-web: gunicorn traintime:app
