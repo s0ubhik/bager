@@ -154,7 +154,7 @@ def traintimeft():
 	return html
 
 @app.route('/download/tele/<filename>')
-def donwload(filename):
+def donwload_tele(filename):
 	if filename not in tele.keys():
 		return "404 File not found"
 
@@ -170,7 +170,7 @@ def donwload(filename):
 
 
 @app.route('/download/drive/<filename>')
-def donwload(filename):
+def donwload_drive(filename):
 	if filename not in drive:
 		return "404 File not found"
 
