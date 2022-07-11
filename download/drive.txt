@@ -1,1 +1,1 @@
-avg.mkv 100 https://drive.google.com/u/0/uc?id=1olpjU0AmE1hxO-bimCsLq6cVbKahMuB4&export=download&confirm=t video/mkv
+avg.mkv 100 https://drive.google.com/u/0/uc?id=1olpjU0AmE1hxO-bimCsLq6cVbKahMuB4&export=download&confirm=t video/x-matroska
