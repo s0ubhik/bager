@@ -9,17 +9,27 @@ print("Loading Station Code Names....")
 with open("traintime/stn_codes.json") as fp:
 	stn_code = json.load(fp)
 
-data = {}
-print("Loading Documents...")
-with open('download/out.txt') as fp:
+tele = {}
+print("Loading Telegram Download Links...")
+with open('download/telegram.txt') as fp:
 	lines = fp.read().split("\n")
 	for line in lines:
 		line = line.strip()
 		if line == '': continue
 		p = line.split(" ")
-		data.update({p[0]: [*p[1:]]})
+		tele.update({p[0]: [*p[1:]]})
 
-def get_file_chunks(info):
+drive = {}
+print("Loading Goofle Drive Download Links...")
+with open('download/drive.txt') as fp:
+	lines = fp.read().split("\n")
+	for line in lines:
+		line = line.strip()
+		if line == '': continue
+		p = line.split(" ")
+		drive.update({p[0]: [*p[1:]]})
+		
+def get_tele_file_chunks(info):
 	p = int(info[1])
 	for i in range(1, int(info[0])+1):
 		download_link = f"https://api.telegram.org/file/bot{TOKEN}/documents/file_{p}.{i}"
@@ -28,6 +38,11 @@ def get_file_chunks(info):
 			yield chunk
 		p += 1
 
+def get_file_chunks(link):
+	r = get(link, stream = True)
+	for chunk in r.iter_content(chunk_size=1024):
+		yield chunk
+			
 app = Flask("app")
 
 @app.route("/code/")
@@ -138,18 +153,35 @@ def traintimeft():
 	html = style + header + table
 	return html
 
-@app.route('/download/<filename>')
+@app.route('/download/tele/<filename>')
 def donwload(filename):
-	if filename not in data.keys():
+	if filename not in tele.keys():
 		return "404 File not found"
 
-	info = data[filename]
+	info = tele[filename]
 
 	return Response(
-        stream_with_context(get_file_chunks(info)),
+        stream_with_context(get_tele_file_chunks(info)),
         headers={
             'Content-Disposition': f'attachment; filename={filename}'
         },
         mimetype=info[2],
     )
+
+
+@app.route('/download/drive/<filename>')
+def donwload(filename):
+	if filename not in drive:
+		return "404 File not found"
+
+	info = drive[filename]
+
+	return Response(
+        stream_with_context(get_file_chunks(info[1])),
+        headers={
+            'Content-Disposition': f'attachment; filename={filename}'
+        },
+        mimetype=info[2],
+    )
+
 
